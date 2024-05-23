@@ -54,6 +54,7 @@ struct debug_percpu_free {
 
 static DEFINE_PER_CPU(struct debug_percpu_free, percpu_obj_pool);
 
+// 通过hash表来跟踪内核对象的分配和释放，帮助检测内存泄漏、双重释放等问题
 static struct debug_bucket	obj_hash[ODEBUG_HASH_SIZE];
 
 static struct debug_obj		obj_static_pool[ODEBUG_POOL_SIZE] __initdata;
@@ -1300,8 +1301,9 @@ void __init debug_objects_early_init(void)
 {
 	int i;
 
-	for (i = 0; i < ODEBUG_HASH_SIZE; i++)
-		raw_spin_lock_init(&obj_hash[i].lock);
+	for (i = 0; i < ODEBUG_HASH_SIZE; i++) {
+		raw_spin_lock_init(&obj_hash[i].lock);      // 初始化自旋锁
+    }
 
 	for (i = 0; i < ODEBUG_POOL_SIZE; i++)
 		hlist_add_head(&obj_static_pool[i].node, &obj_pool);

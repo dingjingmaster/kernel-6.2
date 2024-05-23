@@ -50,7 +50,7 @@ extern rwlock_t tasklist_lock;
 extern spinlock_t mmlist_lock;
 
 extern union thread_union init_thread_union;
-extern struct task_struct init_task;
+extern struct task_struct init_task;                // 最初始的进程
 
 extern int lockdep_tasklist_lock_is_held(void);
 

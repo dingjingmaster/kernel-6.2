@@ -212,6 +212,7 @@
 #define SQUASHFS_MAGIC		0x73717368
 
 /* Constant that identifies the end of stacks allocated by the kernel.  */
+// 常量，标记进程栈结束。常与 struct task_struct 中的 stack 成员关联，用于检测溢出。
 #define STACK_END_MAGIC		0x57AC6E9D
 
 /* Constant that identifies the `sysfs' filesystem.  */

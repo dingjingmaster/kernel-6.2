@@ -942,20 +942,84 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
 	char *command_line;
 	char *after_dashes;
 
+    /**
+     * kernel/fork.c
+     *
+     * init_task + thread_info 32 字节对齐处写入栈越界标记。
+     */
 	set_task_stack_end_magic(&init_task);
+
+    /**
+     *  FIXME:// 空实现
+     * 1. 为每个处理器分配一个唯一的ID
+     * 2. 初始化处理器本地数据结构；例如：每个处理器的栈、寄存器状态等
+     * 3. 设置处理器的特定资源，比如时钟中断和本地中断控制器
+     * 4. 设置处理器之间的通信机制，如：Inter-Processor Interrupts(IPI)
+     * 5. 进行任何其它必要的平台特定的初始化
+     */
 	smp_setup_processor_id();
-	debug_objects_early_init();
+    
+    /**
+     * lib/debugobjects.c
+     * 内核调试相关数据结构初始化
+     */
+	debug_objects_early_init();             
+
+    /**
+     * lib/buildid.c
+     *
+     * 编译内核时候生成构建ID，此ID用于确定举办内核版本。
+     * 此ID由解析内核文件获得
+     */
 	init_vmlinux_build_id();
 
+    /**
+     * FIXME:// 未定义？
+     *
+     * 初始化 cgroup 子系统。cgroup用于限制、记录、隔离进程组使用的物理资源（如：CPU、内存、磁盘ID等）
+     *
+     * 1. 初始化数据结构
+     * 2. 注册子系统
+     * 3. 设置默认值
+     * 4. 初始化资源控制器
+     * 5. 创建根cgroup
+     */
 	cgroup_init_early();
 
+    /**
+     * 用于在当前处理器上禁用本地中断。
+     *
+     * 多处理器中，每个处理器都可以独立禁用或启用它们自己的中断。
+     * 一般实现方式是：控制寄存器写入值，以清除允许中断位。
+     */
 	local_irq_disable();
+
+    /**
+     * true: 禁用中断
+     *
+     * grub把控制权给到操作系统时候已经禁用中断
+     */
 	early_boot_irqs_disabled = true;
 
 	/*
 	 * Interrupts are still disabled. Do necessary setups, then
 	 * enable them.
 	 */
+    /**
+     * kernel/cpu.c
+     *
+     * 初始化启动（或引导）CPU。多处理器系统中，第一个启动的CPU就是引导CPU，负责执行一些早期的系统初始化任务，
+     * 之后才允许其它CPU加入系统的启动过程。
+     *
+     * 1. 初始化CPU特定的数据结构：如，每个CPU变量和状态信息
+     * 2. 设置CPU相关的硬件：如，缓存、时钟等
+     * 3. 初始化中断和异常处理：设置中断描述符表IDT 和 异常处理程序。
+     * 4. 初始化内存管理单元：配置内存分页和映射
+     * 5. 初始化cgroup：如果启用了cgroup，将在CPU上进行初始化
+     * 6. 初始化其它内核子系统：调度器、内核同步机制等
+     * 7. 设置CPU状态：标志CPU为在线状态，使其能够接收和执行任务
+     * 8. 通知其它CPU：一旦CPU初始化完成，它将通知其它CPU开始它们的启动过程。
+     */
 	boot_cpu_init();
 	page_address_init();
 	pr_notice("%s", linux_banner);

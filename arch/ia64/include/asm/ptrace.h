@@ -35,6 +35,13 @@
 # define KERNEL_STACK_SIZE_ORDER		0
 #endif
 
+/**
+ * IA64_TASK_SIZE:          struct task_struct 大小
+ * IA64_THREAD_INFO_SIZE:   struct thread_info 大小
+ *
+ * 确保地址是32位对齐 ((x + 31) & ~31)
+ * 数据起始地址是 32 的倍数
+ */
 #define IA64_RBS_OFFSET			((IA64_TASK_SIZE + IA64_THREAD_INFO_SIZE + 31) & ~31)
 #define IA64_STK_OFFSET			((1 << KERNEL_STACK_SIZE_ORDER)*PAGE_SIZE)
 

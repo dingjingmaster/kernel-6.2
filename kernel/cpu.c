@@ -2692,7 +2692,7 @@ void set_cpu_online(unsigned int cpu, bool online)
  */
 void __init boot_cpu_init(void)
 {
-	int cpu = smp_processor_id();
+	int cpu = smp_processor_id();   // 获取当前处理器的ID
 
 	/* Mark the boot cpu "present", "online" etc for SMP and UP case */
 	set_cpu_online(cpu, true);
