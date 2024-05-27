@@ -449,7 +449,7 @@ setup_arch(char **cmdline_p)
 	hwrpb = (struct hwrpb_struct*) __va(INIT_HWRPB->phys_addr);
 	boot_cpuid = hard_smp_processor_id();
 
-        /*
+    /*
 	 * Pre-process the system type to make sure it will be valid.
 	 *
 	 * This may restore real CABRIO and EB66+ family names, ie
